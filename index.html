@@ -310,6 +310,45 @@ input[type=time],input[type=date],select{
 .confetti{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
 .confetti i{position:absolute;top:-14px;width:8px;height:13px;border-radius:2px;animation-name:fall;animation-timing-function:cubic-bezier(.25,.6,.4,1);animation-fill-mode:forwards}
 
+/* ---------- pomodoro ---------- */
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+@keyframes fadeBg{from{opacity:0}to{opacity:1}}
+@keyframes blink{50%{opacity:.35}}
+@keyframes tick{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+.pomo{position:fixed;inset:0;z-index:70;background:rgba(10,15,30,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center;animation:fadeBg .3s ease-out}
+.pomo-card{--pc:#ef4444;width:100%;max-width:560px;background:var(--card);border-radius:28px 28px 0 0;padding:18px 20px calc(26px + var(--safe-b));text-align:center;position:relative;animation:sheetUp .45s cubic-bezier(.2,.9,.3,1.05);box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+.pomo-card.break,.pomo-card.done{--pc:var(--ok)}
+.pomo-card.ready{--pc:var(--brand)}
+.pomo-x{position:absolute;top:10px;inset-inline-end:12px;font-size:15px;font-weight:800;color:var(--muted);padding:6px 10px;border-radius:10px;background:var(--card2)}
+.pomo-grab{width:42px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 10px}
+.pomo-phase{display:inline-block;font-weight:800;font-size:13px;color:var(--pc);background:color-mix(in srgb,var(--pc) 14%,transparent);padding:4px 14px;border-radius:99px;transition:color .4s,background .4s}
+.pomo-task{font-weight:800;font-size:17px;margin:10px 0 0}
+.pomo-ring{position:relative;width:min(240px,62vw);aspect-ratio:1;margin:14px auto 10px}
+.pomo-ring svg{width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.pomo-ring .pt{fill:none;stroke:var(--line);stroke-width:12}
+.pomo-ring .pf{fill:none;stroke:var(--pc);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset .3s linear,stroke .4s;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--pc) 45%,transparent))}
+.pomo-time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(40px,13vw,56px);font-weight:800;font-variant-numeric:tabular-nums;direction:ltr;line-height:1}
+.pomo-time small{font-size:13px;color:var(--muted);font-weight:700;margin-top:8px;direction:rtl}
+.pomo-card.running .pomo-ring{animation:tick 4s ease-in-out infinite}
+.pomo-card.paused .pomo-time b{animation:blink 1.2s steps(2) infinite}
+.pomo-dots{display:flex;gap:8px;justify-content:center;margin:2px 0 16px}
+.pomo-dots i{width:12px;height:12px;border-radius:50%;background:var(--line);transition:background .3s,transform .3s}
+.pomo-dots i.on{background:var(--pc);transform:scale(1.15)}
+.pomo-dots i.cur{box-shadow:0 0 0 3px color-mix(in srgb,var(--pc) 35%,transparent)}
+.pomo-btns{display:grid;grid-template-columns:2fr 1fr;gap:8px}
+.pomo-btns.one{grid-template-columns:1fr}
+.pomo-btns .btn+.btn{margin:0}
+.pomo .btn:not(.sec){background:var(--pc);transition:background .4s,transform .2s cubic-bezier(.3,1.4,.5,1)}
+.pomo-stop{margin-top:14px;color:var(--bad);font-weight:700;font-size:14px;padding:6px 12px}
+.pomo-mini{position:fixed;z-index:30;bottom:calc(80px + var(--safe-b));inset-inline-start:14px;display:flex;align-items:center;gap:6px;background:#ef4444;color:#fff;font-weight:800;font-size:15px;border-radius:99px;padding:9px 16px;box-shadow:0 10px 24px -8px rgba(0,0,0,.45);font-variant-numeric:tabular-nums;animation:popIn .4s cubic-bezier(.3,1.4,.5,1);transition:background .4s,transform .2s}
+.pomo-mini:active{transform:scale(.95)}
+.pomo-mini.break,.pomo-mini.done{background:var(--ok)}
+.pomo-mini.ready{background:var(--brand)}
+.pomo-mini span{direction:ltr}
+.pomo-go{flex:none;width:36px;height:36px;border-radius:50%;background:color-mix(in srgb,#ef4444 13%,transparent);font-size:17px;display:grid;place-items:center;transition:transform .2s cubic-bezier(.3,1.4,.5,1)}
+.pomo-go:active{transform:scale(.88)}
+.pomo-go.running{box-shadow:0 0 0 2px #ef4444;animation:livePulse 1.8s ease-out infinite}
+
 @media print{
   .tabbar,.toast{display:none!important}
   body{background:#fff}
@@ -356,6 +395,22 @@ input[type=time],input[type=date],select{
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"><div><span id="toastMsg"></span><button id="toastBtn" hidden></button></div></div>
+<div class="pomo" id="pomo" hidden>
+  <div class="pomo-card" id="pomoCard" role="dialog" aria-label="بومودورو">
+    <div class="pomo-grab"></div>
+    <button class="pomo-x" data-act="pomoMin" aria-label="تصغير">تصغير ⌄</button>
+    <div class="pomo-phase" id="pomoPhase">🍅 تركيز</div>
+    <div class="pomo-task"><bdi id="pomoTask"></bdi></div>
+    <div class="pomo-ring">
+      <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="88" class="pt"/><circle cx="100" cy="100" r="88" class="pf" id="pomoArc" stroke-dasharray="552.92" stroke-dashoffset="0"/></svg>
+      <div class="pomo-time"><b id="pomoTime">50:00</b><small id="pomoSub"></small></div>
+    </div>
+    <div class="pomo-dots" id="pomoDots"></div>
+    <div class="pomo-btns" id="pomoBtns"><button class="btn" data-act="pomoMain" id="pomoMain">إيقاف مؤقت</button><button class="btn sec" data-act="pomoSkip" id="pomoSkip">تخطّي ⏭</button></div>
+    <button class="pomo-stop" data-act="pomoStop" id="pomoStop">إنهاء الجلسة</button>
+  </div>
+</div>
+<button class="pomo-mini" id="pomoMini" data-act="pomoOpen" hidden>🍅 <span id="pomoMiniT">50:00</span></button>
 <input type="file" id="importFile" accept="application/json,.json" hidden>
 
 <script>
@@ -1267,7 +1322,7 @@ function shortDM(d) {
 
 /* ---------- state ---------- */
 function defaults() {
-  return { v: 1, start: todayKey(), done: {}, sleep: {}, settings: { theme: 'auto', remind: 10 } };
+  return { v: 1, start: todayKey(), done: {}, sleep: {}, settings: { theme: 'auto', remind: 10 }, pomos: {}, timer: null };
 }
 let S = (() => {
   let s = defaults();
@@ -1276,7 +1331,7 @@ let S = (() => {
     if (raw) { const p = JSON.parse(raw); s = Object.assign(s, p); }
   } catch (e) { /* ignore */ }
   s.settings = Object.assign({ theme: 'auto', remind: 10 }, s.settings || {});
-  s.done = s.done || {}; s.sleep = s.sleep || {};
+  s.done = s.done || {}; s.sleep = s.sleep || {}; s.pomos = s.pomos || {}; s.timer = s.timer || null;
   return s;
 })();
 function save() {
@@ -1438,7 +1493,7 @@ function renderToday() {
     return `<li class="task ${done ? 'done' : ''} ${live ? 'now' : ''}" data-act="toggle" data-key="${esc(key)}" role="checkbox" aria-checked="${done}" style="--i:${ti}">
       <span class="chk">✓</span><span class="ico" style="--h:${c.h}">${c.i}</span>
       <div class="tx"><b><bdi>${esc(it.t)}</bdi></b><small>${fmt(it.s)} – ${fmt(it.e)} · ${dur(mins(it.e) - mins(it.s))}</small></div>
-      ${live ? '<span class="live">دلوقتي</span>' : ''}</li>`;
+      ${live ? '<span class="live">دلوقتي</span>' : ''}${isToday && !done && pomoOK(it) ? `<button class="pomo-go ${S.timer && S.timer.key === key ? 'running' : ''}" data-act="pomoStart" data-key="${esc(key)}" aria-label="ابدأ بومودورو">🍅</button>` : ''}</li>`;
   }).join('');
   const sleepH = ((24 * 60 - mins(PLAN.sleep.bed) + mins(PLAN.sleep.wake)) / 60);
 
@@ -1447,7 +1502,7 @@ function renderToday() {
     <div class="card"><div class="prog">${ring(st.p)}
       <div class="meta"><b>${esc(dp.name)} — ${esc(dp.tag)}</b>
         <small>${st.done} من ${st.total} مهام · ${hrs(st.doneMin)} من ${hrs(st.planMin)} ساعة</small>
-        <div class="chips"><span class="chip">🔥 سلسلة ${sk.cur}</span><span class="chip">🏆 أفضل ${sk.best}</span>
+        <div class="chips"><span class="chip">🔥 سلسلة ${sk.cur}</span><span class="chip">🏆 أفضل ${sk.best}</span>${pomoCount(k) ? `<span class="chip">🍅 ${pomoCount(k)} بومودورو</span>` : ''}
         ${st.p >= PASS ? '<span class="chip" style="color:var(--ok)">✅ يوم ناجح</span>' : `<span class="chip">🎯 الهدف ${pct(PASS)}%</span>`}</div></div></div></div>
     ${nowHtml}${lect}
     <div class="card"><h2>✅ روتين اليوم <small>اضغط على المهمة لتحديدها</small></h2>
@@ -1708,6 +1763,146 @@ function confetti() {
   document.body.appendChild(box); setTimeout(() => box.remove(), 3500);
 }
 
+/* ============================================================
+   POMODORO  (50 دقيقة تركيز / 10 دقايق بريك)
+   ============================================================ */
+const FOCUS = 50 * 60e3, BREAK = 10 * 60e3, ARC = 552.92;
+const pomoOK = it => ['study', 'web', 'german', 'read'].includes(it.c) && !/كورس الألماني/.test(it.t);
+const pomoCycles = it => Math.max(1, Math.round((mins(it.e) - mins(it.s)) / 60));
+const pomoCount = k => (S.pomos = S.pomos || {})[k] || 0;
+let actx = null, wakeLock = null;
+
+function unlockAudio() {
+  try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume(); } catch (e) { /* no audio */ }
+}
+function beep() {
+  if (!actx) return;
+  try {
+    const t = actx.currentTime;
+    [0, .28, .56].forEach((d, i) => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'sine'; o.frequency.value = i === 2 ? 1175 : 880;
+      g.gain.setValueAtTime(0.0001, t + d); g.gain.exponentialRampToValueAtTime(0.35, t + d + .02); g.gain.exponentialRampToValueAtTime(0.0001, t + d + .24);
+      o.connect(g); g.connect(actx.destination); o.start(t + d); o.stop(t + d + .26);
+    });
+  } catch (e) { /* ignore */ }
+}
+function alertUser(msg) {
+  if (navigator.vibrate) navigator.vibrate([300, 120, 300, 120, 300]);
+  beep(); toast(msg);
+}
+async function keepAwake(on) {
+  try {
+    if (on && !wakeLock && 'wakeLock' in navigator && !document.hidden) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); }
+    if (!on && wakeLock) { await wakeLock.release(); wakeLock = null; }
+  } catch (e) { wakeLock = null; }
+}
+
+function pomoStart(key) {
+  const it = dayPlan(new Date()).routine.find(x => itemKey(x) === key); if (!it) return;
+  unlockAudio();
+  if (S.timer && S.timer.key === key && S.timer.day === todayKey()) return pomoOpen();
+  if (S.timer && S.timer.phase !== 'done' && !confirm('فيه بومودورو شغال لمهمة تانية. تبدأ واحدة جديدة؟')) return;
+  S.timer = { day: todayKey(), key, t: it.t, cycles: pomoCycles(it), cycle: 1, phase: 'focus', endsAt: Date.now() + FOCUS, left: null };
+  save(); pomoOpen(); if (ui.tab === 'today') renderToday();
+}
+function pomoAdvance(silent, counted = true) {
+  const T = S.timer; if (!T) return;
+  if (T.phase === 'focus') {
+    if (counted) { S.pomos = S.pomos || {}; S.pomos[T.day] = pomoCount(T.day) + 1; }
+    if (T.cycle >= T.cycles) {
+      T.phase = 'done'; T.endsAt = null; T.left = null;
+      S.done[T.day] = S.done[T.day] || {}; S.done[T.day][T.key] = 1;
+      if (!silent) { alertUser('🎉 خلّصت البلوك كله! المهمة اتعلّمت'); confetti(); }
+    } else {
+      T.phase = 'break'; T.endsAt = (silent ? T.endsAt : Date.now()) + BREAK; T.left = null;
+      if (!silent) alertUser('☕ برافو! خد بريك 10 دقايق');
+    }
+  } else if (T.phase === 'break') {
+    T.phase = 'ready'; T.endsAt = null; T.left = null;
+    if (!silent) alertUser('💪 البريك خلص — يلا نكمل');
+  }
+  save();
+}
+function pomoCatchUp() {
+  const T = S.timer; if (!T) return false;
+  if (T.day !== todayKey()) { S.timer = null; save(); return true; }
+  let changed = false;
+  while (S.timer && S.timer.endsAt && Date.now() >= S.timer.endsAt) { pomoAdvance(true); changed = true; }
+  if (changed) {
+    const p = S.timer && S.timer.phase;
+    toast(p === 'break' ? '☕ وقت البريك' : p === 'ready' ? '💪 البريك خلص — يلا نكمل' : '🎉 خلّصت البلوك كله!');
+    if (ui.tab === 'today') renderToday();
+  }
+  return changed;
+}
+function pomoMain() {
+  const T = S.timer; if (!T) return;
+  unlockAudio();
+  if (T.phase === 'done') { S.timer = null; ui.pomoOpen = false; save(); if (ui.tab === 'today') renderToday(); return pomoPaint(); }
+  if (T.phase === 'ready') { T.cycle++; T.phase = 'focus'; T.endsAt = Date.now() + FOCUS; T.left = null; }
+  else if (T.left != null) { T.endsAt = Date.now() + T.left; T.left = null; }          // resume
+  else { T.left = Math.max(0, T.endsAt - Date.now()); T.endsAt = null; }               // pause
+  save(); pomoPaint();
+}
+function pomoSkip() {
+  const T = S.timer; if (!T) return;
+  if (T.phase === 'focus') pomoAdvance(false, false);
+  else if (T.phase === 'break') { T.phase = 'ready'; T.endsAt = null; T.left = null; save(); }
+  if (ui.tab === 'today') renderToday();
+  pomoPaint();
+}
+function pomoStop() {
+  if (!S.timer) return;
+  if (S.timer.phase !== 'done' && !confirm('تنهي جلسة البومودورو؟')) return;
+  S.timer = null; ui.pomoOpen = false; save(); keepAwake(false);
+  if (ui.tab === 'today') renderToday();
+  pomoPaint();
+}
+function pomoOpen() { ui.pomoOpen = true; pomoPaint(); }
+
+function pomoPaint() {
+  const T = S.timer, ov = $('#pomo'), mini = $('#pomoMini');
+  if (!T) { ov.hidden = true; mini.hidden = true; document.title = pomoPaint.title || document.title; keepAwake(false); return; }
+  pomoPaint.title = pomoPaint.title || document.title;
+  const total = T.phase === 'break' ? BREAK : FOCUS;
+  const left = T.left != null ? T.left : T.endsAt ? Math.max(0, T.endsAt - Date.now()) : (T.phase === 'ready' ? FOCUS : 0);
+  const s = Math.ceil(left / 1000), mmss = `${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
+  const paused = T.left != null, running = !!T.endsAt;
+  const labels = { focus: '🍅 تركيز', break: '☕ بريك', ready: '✋ مستنيك تكمل', done: '🎉 خلّصت' };
+  const card = $('#pomoCard');
+  card.className = `pomo-card ${T.phase} ${paused ? 'paused' : ''} ${running ? 'running' : ''}`;
+  $('#pomoPhase').textContent = labels[T.phase] + (paused ? ' · متوقف' : '');
+  $('#pomoTask').textContent = T.t;
+  $('#pomoTime').textContent = T.phase === 'done' ? '✓' : mmss;
+  $('#pomoSub').textContent = T.phase === 'done' ? `${T.cycles} بومودورو 💪` : `بومودورو ${T.cycle} من ${T.cycles}`;
+  $('#pomoArc').setAttribute('stroke-dashoffset', (T.phase === 'done' ? 0 : ARC * (1 - left / total)).toFixed(2));
+  $('#pomoDots').innerHTML = Array.from({ length: T.cycles }, (_, i) => {
+    const doneN = T.phase === 'focus' ? T.cycle - 1 : T.cycle, cur = T.phase === 'ready' ? T.cycle : T.cycle - 1;
+    return `<i class="${i < doneN ? 'on' : ''} ${i === cur && T.phase !== 'done' ? 'cur' : ''}"></i>`;
+  }).join('');
+  $('#pomoMain').textContent = T.phase === 'done' ? 'تمام 👌' : T.phase === 'ready' ? `▶ ابدأ بومودورو ${T.cycle + 1}` : paused ? '▶ كمّل' : '⏸ إيقاف مؤقت';
+  $('#pomoSkip').hidden = T.phase === 'done' || T.phase === 'ready';
+  $('#pomoBtns').classList.toggle('one', $('#pomoSkip').hidden);
+  $('#pomoStop').hidden = T.phase === 'done';
+  ov.hidden = !ui.pomoOpen;
+  mini.hidden = !!ui.pomoOpen;
+  mini.className = `pomo-mini ${T.phase}`;
+  $('#pomoMiniT').textContent = T.phase === 'done' ? '✓' : T.phase === 'ready' ? '▶' : (paused ? '⏸ ' : '') + mmss;
+  document.title = T.phase === 'done' || T.phase === 'ready' ? pomoPaint.title : `${T.phase === 'break' ? '☕' : '🍅'} ${mmss}`;
+  keepAwake(running && !!ui.pomoOpen);
+}
+function pomoTick() {
+  if (S.timer && S.timer.endsAt && Date.now() >= S.timer.endsAt) {
+    if (document.hidden) pomoCatchUp();
+    else { pomoAdvance(false); if (ui.tab === 'today') renderToday(); }
+  }
+  pomoPaint();
+}
+$('#pomo').addEventListener('click', e => { if (e.target.id === 'pomo') { ui.pomoOpen = false; pomoPaint(); } });
+setInterval(pomoTick, 250);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { pomoCatchUp(); pomoPaint(); } });
+
 document.addEventListener('click', async e => {
   const el = e.target.closest('[data-act]'); if (!el) return;
   const a = el.dataset.act;
@@ -1715,6 +1910,12 @@ document.addEventListener('click', async e => {
     case 'tab': go(el.dataset.tab); break;
     case 'day': ui.day = el.dataset.day; renderToday.scrolled = false; ui.anim = true; renderToday(); animateIn($('#v-today')); break;
     case 'toggle': toggle(el.dataset.key); break;
+    case 'pomoStart': pomoStart(el.dataset.key); break;
+    case 'pomoMain': pomoMain(); break;
+    case 'pomoSkip': pomoSkip(); break;
+    case 'pomoStop': pomoStop(); break;
+    case 'pomoMin': ui.pomoOpen = false; pomoPaint(); break;
+    case 'pomoOpen': ui.pomoOpen = true; pomoPaint(); break;
     case 'range': ui.range = +el.dataset.n; renderStats(); animateIn($('#v-stats')); break;
     case 'theme': S.settings.theme = el.dataset.v; save(); applyTheme(); renderMore(); break;
     case 'sub': {
@@ -1768,8 +1969,10 @@ if ('serviceWorker' in navigator) {
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 
 applyTheme();
+pomoCatchUp();
 ui.anim = true;
 render();
+pomoPaint();
 animateIn($('#v-' + ui.tab));
 window.__app = { get S() { return S; }, ui, dayStats, streaks, buildICS };   // للاختبار
 })();
