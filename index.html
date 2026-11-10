@@ -136,7 +136,7 @@ main{padding:0 14px calc(92px + var(--safe-b));margin-top:-38px}
 .task .tx b{display:block;font-size:14.5px;font-weight:700}
 .task .tx small{color:var(--muted);font-size:12px}
 .task.done .tx b{text-decoration:line-through;color:var(--muted)}
-.task.now{background:color-mix(in srgb,var(--brand) 9%,transparent);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--brand) 55%,transparent);padding-inline:8px;margin-block:2px}
+.task.now{color:var(--text);border:0;background:color-mix(in srgb,var(--brand) 9%,transparent);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--brand) 55%,transparent);padding-inline:8px;margin-block:2px}
 .task .live{font-size:11px;font-weight:800;background:var(--brand);color:#fff;border-radius:99px;padding:2px 8px;flex:none}
 .sleeprow{display:flex;align-items:center;gap:11px;padding:11px 4px 2px}
 .sleeprow .ico{background:hsl(250 45% 28%);color:#fff}
@@ -145,7 +145,7 @@ main{padding:0 14px calc(92px + var(--safe-b));margin-top:-38px}
 
 /* ---------- lectures ---------- */
 .lect{display:flex;gap:12px;padding:12px;border-radius:16px;background:var(--card2);border:1px solid var(--line);margin-bottom:8px;position:relative;border-inline-start:4px solid var(--brand)}
-.lect.now{box-shadow:0 0 0 2px var(--brand)}
+.lect.now{color:var(--text);box-shadow:0 0 0 2px var(--brand)}
 .lect .tm{min-width:62px;text-align:center;font-size:12px;font-weight:800;color:var(--brand)}
 .lect .tm small{display:block;color:var(--muted);font-weight:600}
 .lect h3{margin:0;font-size:14.5px;font-weight:800;direction:ltr;text-align:right}
@@ -227,6 +227,89 @@ input[type=time],input[type=date],select{
 .toast div{background:#0f172a;color:#fff;border-radius:14px;padding:11px 16px;font-weight:700;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);display:flex;gap:12px;align-items:center;max-width:90vw}
 .toast button{color:#93c5fd;font-weight:800}
 
+/* ---------- animations & motion ---------- */
+@keyframes slideIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@keyframes chipIn{from{opacity:0;transform:translateY(12px) scale(.85)}to{opacity:1;transform:none}}
+@keyframes popIn{from{opacity:0;transform:scale(.9) translateY(10px)}to{opacity:1;transform:none}}
+@keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes shimmer{to{transform:translateX(100%)}}
+@keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(79,70,229,.55)}70%{box-shadow:0 0 0 9px rgba(79,70,229,0)}100%{box-shadow:0 0 0 0 rgba(79,70,229,0)}}
+@keyframes ringPulse{0%,100%{box-shadow:0 0 0 2px var(--brand)}50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--brand) 35%,transparent)}}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-3px) rotate(-6deg)}75%{transform:translateY(-1px) rotate(6deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes chkPop{0%{transform:scale(.3)}55%{transform:scale(1.3)}100%{transform:scale(1)}}
+@keyframes burst{0%{box-shadow:0 0 0 0 rgba(16,185,129,.6)}100%{box-shadow:0 0 0 14px rgba(16,185,129,0)}}
+@keyframes rowFlash{0%{background:color-mix(in srgb,var(--ok) 22%,transparent)}100%{background:transparent}}
+@keyframes chkOut{0%{transform:scale(.75)}100%{transform:scale(1)}}
+@keyframes tabPop{0%{transform:scale(.7) translateY(4px)}60%{transform:scale(1.18) translateY(-3px)}100%{transform:none}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes fillX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes fade{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+@keyframes fall{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--dx),105vh) rotate(var(--r));opacity:.85}}
+@keyframes heroIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+
+/* page enter: cards cascade in */
+.view{animation:none}
+.view.enter>*{animation:rise .55s cubic-bezier(.2,.8,.2,1) both}
+.view.enter>*:nth-child(2){animation-delay:.06s}
+.view.enter>*:nth-child(3){animation-delay:.12s}
+.view.enter>*:nth-child(4){animation-delay:.18s}
+.view.enter>*:nth-child(5){animation-delay:.24s}
+.view.enter>*:nth-child(6){animation-delay:.3s}
+.view.enter>*:nth-child(n+7){animation-delay:.36s}
+.view.enter .dchip{animation:chipIn .5s cubic-bezier(.3,1.4,.5,1) both;animation-delay:calc(var(--i,0) * 45ms)}
+.view.enter .task{animation:slideIn .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.25s + var(--i,0) * 30ms)}
+.view.enter .lect{animation:slideIn .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.2s + var(--i,0) * 80ms)}
+.view.enter .kpi{animation:popIn .5s cubic-bezier(.3,1.3,.5,1) both}
+.view.enter .kpi:nth-child(2){animation-delay:.07s}
+.view.enter .kpi:nth-child(3){animation-delay:.14s}
+.view.enter .kpi:nth-child(4){animation-delay:.21s}
+.view.enter .chart rect:not(.bg){transform-box:fill-box;transform-origin:bottom;animation:grow .7s cubic-bezier(.2,.8,.2,1) .2s both}
+.view.enter .track i{transform-origin:right;animation:fillX .9s cubic-bezier(.2,.8,.2,1) .25s both}
+.view.enter .heat i{animation:fade .4s ease-out .2s both}
+.view.enter .rule,.view.enter .row2,.view.enter .ins{animation:slideIn .45s cubic-bezier(.2,.8,.2,1) .15s both}
+
+/* header */
+.top{background-size:200% 200%;animation:grad 12s ease infinite}
+.top h1{animation:heroIn .6s cubic-bezier(.2,.8,.2,1) both}
+.top p{animation:heroIn .6s cubic-bezier(.2,.8,.2,1) .08s both}
+.top .pill{animation:popIn .6s cubic-bezier(.3,1.4,.5,1) .15s both}
+
+/* now card */
+.card.now{background-size:220% 220%;animation:grad 8s ease infinite}
+.bar>i{position:relative;overflow:hidden;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.bar>i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(14,165,233,.55),transparent);transform:translateX(-100%);animation:shimmer 2.2s ease-in-out infinite}
+.task .live{animation:livePulse 1.8s ease-out infinite}
+.task.now .ico{animation:bob 2.6s ease-in-out infinite}
+.lect.now{animation:ringPulse 2.2s ease-in-out infinite}
+.offcard .big{display:inline-block;animation:float 3.2s ease-in-out infinite}
+
+/* ring */
+.ring .rf{transition:stroke-dashoffset .9s cubic-bezier(.2,.8,.2,1)}
+
+/* touch feedback */
+.task,.dchip,.lect,.btn,.seg button,.q button,.chip,.kpi,.tabbar button{transition:transform .2s cubic-bezier(.3,1.4,.5,1),background-color .25s,color .25s,box-shadow .25s,border-color .25s}
+.task:active,.dchip:active,.lect:active,.btn:active,.seg button:active,.q button:active,.tabbar button:active{transform:scale(.96)}
+.task .tx b{transition:color .25s}
+
+/* check / uncheck */
+.task.pop{animation:rowFlash .8s ease-out}
+.task.pop .chk{animation:chkPop .5s cubic-bezier(.3,1.6,.5,1),burst .7s ease-out}
+.task.unpop .chk{animation:chkOut .3s ease-out}
+
+/* tab bar */
+.tabbar button{position:relative}
+.tabbar button::after{content:"";position:absolute;top:-6px;inset-inline:0;margin:auto;width:22px;height:3px;border-radius:3px;background:currentColor;transform:scaleX(0);transition:transform .35s cubic-bezier(.3,1.5,.5,1)}
+.tabbar button.on::after{transform:scaleX(1)}
+.tabbar button.on svg{animation:tabPop .45s cubic-bezier(.3,1.6,.5,1)}
+
+/* toast */
+.toast{transform:translateY(26px) scale(.92);transition:opacity .3s,transform .5s cubic-bezier(.3,1.5,.5,1)}
+
+/* confetti */
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.confetti i{position:absolute;top:-14px;width:8px;height:13px;border-radius:2px;animation-name:fall;animation-timing-function:cubic-bezier(.25,.6,.4,1);animation-fill-mode:forwards}
+
 @media print{
   .tabbar,.toast{display:none!important}
   body{background:#fff}
@@ -285,8 +368,8 @@ window.PLAN = {
  "owner": "سيف",
  "term": "خريف 2026",
  "sleep": {
-  "bed": "22:30",
-  "wake": "06:00",
+  "bed": "22:15",
+  "wake": "05:45",
   "target": 7.5
  },
  "days": [
@@ -295,59 +378,95 @@ window.PLAN = {
    "name": "الأحد",
    "tag": "يوم أجازة من الجامعة",
    "kind": "off",
-   "offMsg": "جدولك متظبط إن الأحد أجازة تماماً من الجامعة — استغله في التطوير الشخصي!",
+   "offMsg": "الأحد أجازة من الجامعة — يوم تحضير لمواد الاتنين ومذاكرة تقيلة.",
    "routine": [
     {
-     "s": "06:00",
-     "e": "06:15",
+     "s": "05:45",
+     "e": "06:00",
      "t": "استيقاظ + ورد قرآن ١٥ دقيقة",
      "c": "quran"
     },
     {
-     "s": "06:15",
-     "e": "09:30",
-     "t": "فطار + مذاكرة الجامعة (تحضير للأسبوع)",
-     "c": "study"
-    },
-    {
-     "s": "09:30",
-     "e": "11:30",
-     "t": "مذاكرة ألماني",
-     "c": "german"
-    },
-    {
-     "s": "11:30",
-     "e": "13:30",
-     "t": "قراءة كتب وممارسة إنجليزي",
-     "c": "read"
-    },
-    {
-     "s": "13:30",
-     "e": "15:00",
-     "t": "غداء وراحة",
+     "s": "06:00",
+     "e": "06:15",
+     "t": "Pre-workout",
      "c": "meal"
     },
     {
-     "s": "15:00",
-     "e": "18:00",
+     "s": "06:15",
+     "e": "08:45",
      "t": "تمرين الجيم (Legs Day)",
      "c": "gym"
     },
     {
-     "s": "18:00",
-     "e": "21:00",
+     "s": "08:45",
+     "e": "09:00",
+     "t": "Post-workout",
+     "c": "meal"
+    },
+    {
+     "s": "09:00",
+     "e": "09:30",
+     "t": "Breakfast + شاور",
+     "c": "meal"
+    },
+    {
+     "s": "09:30",
+     "e": "11:30",
+     "t": "مذاكرة: Probability & Statistics (تحضير لسكشن الاتنين)",
+     "c": "study"
+    },
+    {
+     "s": "11:30",
+     "e": "13:30",
+     "t": "مذاكرة: Storage Technologies (تحضير لمحاضرة الاتنين)",
+     "c": "study"
+    },
+    {
+     "s": "13:30",
+     "e": "14:30",
+     "t": "راحة",
+     "c": "rest"
+    },
+    {
+     "s": "14:30",
+     "e": "16:30",
+     "t": "مذاكرة: Computer Networks (تحضير لسكشن الاتنين)",
+     "c": "study"
+    },
+    {
+     "s": "16:30",
+     "e": "17:00",
+     "t": "راحة",
+     "c": "evening"
+    },
+    {
+     "s": "17:00",
+     "e": "19:00",
      "t": "كورس الويب (تركيز عميق)",
      "c": "web"
     },
     {
-     "s": "21:00",
+     "s": "19:00",
+     "e": "20:00",
+     "t": "Dinner وراحة",
+     "c": "meal"
+    },
+    {
+     "s": "20:00",
      "e": "21:30",
-     "t": "شطرنج وحل تكتيكات",
-     "c": "chess"
+     "t": "مذاكرة ألماني (تركيز مكثف)",
+     "c": "german"
     },
     {
      "s": "21:30",
-     "e": "22:30",
+     "e": "22:00",
+     "t": "شطرنج",
+     "c": "chess"
+    },
+    {
+     "s": "22:00",
+     "e": "22:15",
      "t": "روتين مسائي وتجهيز للنوم",
      "c": "evening"
     }
@@ -362,82 +481,116 @@ window.PLAN = {
    "offMsg": "",
    "routine": [
     {
-     "s": "06:00",
-     "e": "06:15",
+     "s": "05:45",
+     "e": "06:00",
      "t": "استيقاظ + ورد قرآن ١٥ دقيقة",
      "c": "quran"
     },
     {
+     "s": "06:00",
+     "e": "06:15",
+     "t": "Pre-workout",
+     "c": "meal"
+    },
+    {
      "s": "06:15",
-     "e": "07:45",
-     "t": "فطار وتجهيز للنزول",
+     "e": "08:45",
+     "t": "تمرين الجيم (بالمشي رايح جاي)",
+     "c": "gym"
+    },
+    {
+     "s": "08:45",
+     "e": "09:00",
+     "t": "Post-workout",
+     "c": "meal"
+    },
+    {
+     "s": "09:00",
+     "e": "09:30",
+     "t": "شاور ولبس وتجهيز للنزول",
      "c": "prep"
     },
     {
-     "s": "07:45",
-     "e": "08:45",
+     "s": "09:30",
+     "e": "10:30",
      "t": "مواصلات (بودكاست إنجليزي)",
      "c": "commute"
     },
     {
-     "s": "08:45",
-     "e": "14:10",
+     "s": "10:30",
+     "e": "12:10",
      "t": "محاضرات وسكاشن (انظر التفاصيل)",
      "c": "uni"
     },
     {
-     "s": "14:10",
-     "e": "15:30",
+     "s": "12:10",
+     "e": "12:30",
+     "t": "Breakfast (في البريك — خده معاك)",
+     "c": "meal"
+    },
+    {
+     "s": "12:30",
+     "e": "15:55",
+     "t": "محاضرات وسكاشن (انظر التفاصيل)",
+     "c": "uni"
+    },
+    {
+     "s": "15:55",
+     "e": "17:00",
      "t": "رجوع (قراءة كتاب)",
      "c": "commute"
     },
     {
-     "s": "15:30",
-     "e": "16:30",
-     "t": "غداء وراحة",
-     "c": "meal"
+     "s": "17:00",
+     "e": "17:30",
+     "t": "راحة",
+     "c": "rest"
     },
     {
-     "s": "16:30",
-     "e": "19:30",
-     "t": "تمرين الجيم (بعد الرجوع من الجامعة)",
-     "c": "gym"
-    },
-    {
-     "s": "19:30",
-     "e": "21:30",
-     "t": "مذاكرة الجامعة",
+     "s": "17:30",
+     "e": "18:30",
+     "t": "مذاكرة: Probability & Statistics (سكشن النهارده)",
      "c": "study"
     },
     {
-     "s": "21:30",
+     "s": "18:30",
+     "e": "19:30",
+     "t": "مذاكرة: Storage Technologies (محاضرة النهارده)",
+     "c": "study"
+    },
+    {
+     "s": "19:30",
+     "e": "20:00",
+     "t": "Dinner",
+     "c": "meal"
+    },
+    {
+     "s": "20:00",
+     "e": "21:00",
+     "t": "مذاكرة: Computer Networks (سكشن النهارده)",
+     "c": "study"
+    },
+    {
+     "s": "21:00",
      "e": "22:00",
      "t": "كورس الويب (كتابة كود)",
      "c": "web"
     },
     {
      "s": "22:00",
-     "e": "22:30",
-     "t": "شطرنج سريع",
-     "c": "chess"
+     "e": "22:15",
+     "t": "روتين مسائي وتجهيز للنوم",
+     "c": "evening"
     }
    ],
    "lectures": [
     {
-     "t": "System Analysis & Design",
-     "k": "سكشن",
-     "s": "08:45",
-     "e": "10:25",
-     "who": "م. محمد عبدالناصر",
-     "room": "قاعة 6020"
-    },
-    {
-     "t": "Computer Networks",
-     "k": "سكشن",
+     "t": "Probability & Statistics",
+     "k": "إعادة",
      "s": "10:30",
      "e": "12:10",
-     "who": "م. يارا تامر",
-     "room": "قاعة 6020"
+     "who": "م. شهد محمد",
+     "room": "قاعة R-9105 (سنة تانية C10)"
     },
     {
      "t": "Storage Technologies",
@@ -446,26 +599,46 @@ window.PLAN = {
      "e": "14:10",
      "who": "د. جرمين جرجس",
      "room": "قاعة R-9101"
+    },
+    {
+     "t": "Computer Networks",
+     "k": "سكشن",
+     "s": "14:15",
+     "e": "15:55",
+     "who": "م. يارا تامر",
+     "room": "قاعة 6020 (C07)"
     }
    ]
   },
   {
    "id": "tue",
    "name": "الثلاثاء",
-   "tag": "يوم جامعة",
+   "tag": "يوم جامعة + كورس ألماني",
    "kind": "uni",
    "offMsg": "",
    "routine": [
     {
-     "s": "06:00",
-     "e": "06:15",
+     "s": "05:45",
+     "e": "06:00",
      "t": "استيقاظ + ورد قرآن ١٥ دقيقة",
      "c": "quran"
     },
     {
-     "s": "06:15",
+     "s": "06:00",
+     "e": "07:00",
+     "t": "مذاكرة ألماني (تحضير للكورس)",
+     "c": "german"
+    },
+    {
+     "s": "07:00",
+     "e": "07:15",
+     "t": "Breakfast",
+     "c": "meal"
+    },
+    {
+     "s": "07:15",
      "e": "07:45",
-     "t": "فطار وتجهيز",
+     "t": "لبس وتجهيز",
      "c": "prep"
     },
     {
@@ -476,33 +649,45 @@ window.PLAN = {
     },
     {
      "s": "08:45",
-     "e": "15:55",
-     "t": "محاضرات وسكاشن (انظر التفاصيل)",
+     "e": "14:10",
+     "t": "محاضرات (انظر التفاصيل)",
      "c": "uni"
     },
     {
-     "s": "15:55",
-     "e": "17:00",
+     "s": "14:10",
+     "e": "15:30",
+     "t": "مواصلات لكورس الألماني",
+     "c": "commute"
+    },
+    {
+     "s": "15:30",
+     "e": "18:30",
+     "t": "كورس الألماني",
+     "c": "german"
+    },
+    {
+     "s": "18:30",
+     "e": "19:15",
      "t": "رجوع (مراجعة ألماني)",
      "c": "commute"
     },
     {
-     "s": "17:00",
-     "e": "18:00",
-     "t": "غداء وراحة",
+     "s": "19:15",
+     "e": "19:30",
+     "t": "Pre-workout",
      "c": "meal"
     },
     {
-     "s": "18:00",
-     "e": "21:00",
-     "t": "تمرين الجيم (بعد الرجوع من الجامعة)",
+     "s": "19:30",
+     "e": "22:00",
+     "t": "تمرين الجيم (بالمشي رايح جاي)",
      "c": "gym"
     },
     {
-     "s": "21:00",
-     "e": "22:30",
-     "t": "مذاكرة الجامعة",
-     "c": "study"
+     "s": "22:00",
+     "e": "22:15",
+     "t": "Post-workout + Dinner خفيف",
+     "c": "meal"
     }
    ],
    "lectures": [
@@ -523,20 +708,12 @@ window.PLAN = {
      "room": "قاعة R-9202"
     },
     {
-     "t": "Computer Networks",
-     "k": "محاضرة",
-     "s": "12:30",
-     "e": "14:10",
-     "who": "د. هيثم رزق",
-     "room": "قاعة R-9202"
-    },
-    {
      "t": "Probability & Statistics",
      "k": "إعادة",
-     "s": "14:15",
-     "e": "15:55",
+     "s": "12:30",
+     "e": "14:10",
      "who": "أ.د. عمرو فؤاد",
-     "room": "قاعة R-9102 (مجموعة G04)"
+     "room": "قاعة R-9102 (مجموعة G03)"
     }
    ]
   },
@@ -548,76 +725,116 @@ window.PLAN = {
    "offMsg": "",
    "routine": [
     {
-     "s": "06:00",
-     "e": "06:15",
+     "s": "05:45",
+     "e": "06:00",
      "t": "استيقاظ + ورد قرآن ١٥ دقيقة",
      "c": "quran"
     },
     {
+     "s": "06:00",
+     "e": "06:15",
+     "t": "Pre-workout",
+     "c": "meal"
+    },
+    {
      "s": "06:15",
-     "e": "07:45",
-     "t": "فطار وتجهيز",
+     "e": "08:45",
+     "t": "تمرين الجيم (بالمشي رايح جاي)",
+     "c": "gym"
+    },
+    {
+     "s": "08:45",
+     "e": "09:00",
+     "t": "Post-workout",
+     "c": "meal"
+    },
+    {
+     "s": "09:00",
+     "e": "09:30",
+     "t": "شاور ولبس وتجهيز للنزول",
      "c": "prep"
     },
     {
-     "s": "07:45",
-     "e": "08:45",
+     "s": "09:30",
+     "e": "10:30",
      "t": "مواصلات (قراءة كتاب)",
      "c": "commute"
     },
     {
-     "s": "08:45",
-     "e": "14:10",
+     "s": "10:30",
+     "e": "12:10",
      "t": "محاضرات وسكاشن (انظر التفاصيل)",
      "c": "uni"
     },
     {
-     "s": "14:10",
-     "e": "15:30",
-     "t": "رجوع (بودكاست إنجليزي)",
-     "c": "commute"
-    },
-    {
-     "s": "15:30",
-     "e": "16:30",
-     "t": "غداء وراحة",
+     "s": "12:10",
+     "e": "12:30",
+     "t": "Breakfast (في البريك — خده معاك)",
      "c": "meal"
     },
     {
-     "s": "16:30",
+     "s": "12:30",
+     "e": "15:55",
+     "t": "محاضرات وسكاشن (انظر التفاصيل)",
+     "c": "uni"
+    },
+    {
+     "s": "15:55",
+     "e": "17:00",
+     "t": "رجوع (بودكاست ألماني)",
+     "c": "commute"
+    },
+    {
+     "s": "17:00",
+     "e": "17:30",
+     "t": "راحة",
+     "c": "rest"
+    },
+    {
+     "s": "17:30",
+     "e": "18:30",
+     "t": "مذاكرة: Information Systems (محاضرة التلات + سكشن النهارده)",
+     "c": "study"
+    },
+    {
+     "s": "18:30",
      "e": "19:30",
-     "t": "تمرين الجيم (بعد الرجوع من الجامعة)",
-     "c": "gym"
+     "t": "مذاكرة: Operating Systems (محاضرة النهارده)",
+     "c": "study"
     },
     {
      "s": "19:30",
+     "e": "20:00",
+     "t": "Dinner",
+     "c": "meal"
+    },
+    {
+     "s": "20:00",
      "e": "21:00",
-     "t": "مذاكرة الجامعة",
+     "t": "مذاكرة: Storage Technologies (سكشن النهارده)",
      "c": "study"
     },
     {
      "s": "21:00",
-     "e": "22:30",
-     "t": "ألماني (تركيز مكثف)",
+     "e": "22:00",
+     "t": "مذاكرة ألماني (مراجعة كورس التلات)",
      "c": "german"
+    },
+    {
+     "s": "22:00",
+     "e": "22:15",
+     "t": "روتين مسائي وتجهيز للنوم",
+     "c": "evening"
     }
    ],
    "lectures": [
     {
-     "t": "Probability & Statistics",
-     "k": "إعادة",
-     "s": "08:45",
-     "e": "10:25",
-     "who": "م. شهد محمد",
-     "room": "قاعة R-9105"
-    },
-    {
-     "t": "Storage Technologies",
+     "t": "Information Systems",
      "k": "سكشن",
      "s": "10:30",
      "e": "12:10",
-     "who": "م. دعاء علي",
-     "room": "قاعة 6108"
+     "who": "م.م. هند ماهر",
+     "room": "قاعة 6106 (C07)"
     },
     {
      "t": "Operating Systems",
@@ -626,6 +843,14 @@ window.PLAN = {
      "e": "14:10",
      "who": "د. ألبير شوقي",
      "room": "قاعة R-9202"
+    },
+    {
+     "t": "Storage Technologies",
+     "k": "سكشن",
+     "s": "14:15",
+     "e": "15:55",
+     "who": "م. تسنيم جمال / م. دعاء علي",
+     "room": "قاعة 6108 (مع NT C09)"
     }
    ]
   },
@@ -637,45 +862,57 @@ window.PLAN = {
    "offMsg": "",
    "routine": [
     {
-     "s": "06:00",
-     "e": "06:15",
+     "s": "05:45",
+     "e": "06:00",
      "t": "استيقاظ + ورد قرآن ١٥ دقيقة",
      "c": "quran"
     },
     {
+     "s": "06:00",
+     "e": "06:15",
+     "t": "Pre-workout",
+     "c": "meal"
+    },
+    {
      "s": "06:15",
-     "e": "07:45",
-     "t": "مذاكرة الجامعة",
-     "c": "study"
+     "e": "08:45",
+     "t": "تمرين الجيم (بالمشي رايح جاي)",
+     "c": "gym"
     },
     {
-     "s": "07:45",
-     "e": "09:15",
-     "t": "مذاكرة ألماني",
-     "c": "german"
+     "s": "08:45",
+     "e": "09:00",
+     "t": "Post-workout",
+     "c": "meal"
     },
     {
-     "s": "09:15",
-     "e": "10:00",
-     "t": "كورس الويب",
-     "c": "web"
-    },
-    {
-     "s": "10:00",
-     "e": "11:30",
-     "t": "فطار وتجهيز للنزول",
+     "s": "09:00",
+     "e": "09:30",
+     "t": "شاور ولبس وتجهيز للنزول",
      "c": "prep"
     },
     {
-     "s": "11:30",
-     "e": "12:30",
+     "s": "09:30",
+     "e": "10:30",
      "t": "مواصلات (بودكاست إنجليزي)",
      "c": "commute"
     },
     {
+     "s": "10:30",
+     "e": "12:10",
+     "t": "محاضرات وسكاشن (انظر التفاصيل)",
+     "c": "uni"
+    },
+    {
+     "s": "12:10",
+     "e": "12:30",
+     "t": "Breakfast (في البريك — خده معاك)",
+     "c": "meal"
+    },
+    {
      "s": "12:30",
      "e": "15:55",
-     "t": "سكاشن الجامعة (انظر التفاصيل)",
+     "t": "محاضرات وسكاشن (انظر التفاصيل)",
      "c": "uni"
     },
     {
@@ -686,72 +923,116 @@ window.PLAN = {
     },
     {
      "s": "17:00",
-     "e": "18:00",
-     "t": "غداء وراحة",
+     "e": "17:30",
+     "t": "راحة",
+     "c": "rest"
+    },
+    {
+     "s": "17:30",
+     "e": "18:30",
+     "t": "مذاكرة: System Analysis & Design (محاضرة التلات + سكشن النهارده)",
+     "c": "study"
+    },
+    {
+     "s": "18:30",
+     "e": "19:30",
+     "t": "مذاكرة: Computer Networks (محاضرة النهارده)",
+     "c": "study"
+    },
+    {
+     "s": "19:30",
+     "e": "20:00",
+     "t": "Dinner",
      "c": "meal"
     },
     {
-     "s": "18:00",
+     "s": "20:00",
      "e": "21:00",
-     "t": "تمرين الجيم (بعد الرجوع من الجامعة)",
-     "c": "gym"
+     "t": "مذاكرة: Operating Systems (سكشن النهارده)",
+     "c": "study"
     },
     {
      "s": "21:00",
-     "e": "22:30",
-     "t": "كورس الويب (تطبيق)",
+     "e": "22:00",
+     "t": "كورس الويب (كتابة كود)",
      "c": "web"
+    },
+    {
+     "s": "22:00",
+     "e": "22:15",
+     "t": "روتين مسائي وتجهيز للنوم",
+     "c": "evening"
     }
    ],
    "lectures": [
     {
-     "t": "Information Systems",
+     "t": "System Analysis & Design",
      "k": "سكشن",
+     "s": "10:30",
+     "e": "12:10",
+     "who": "م. محمد عبدالناصر",
+     "room": "قاعة 6301 (C07)"
+    },
+    {
+     "t": "Computer Networks",
+     "k": "محاضرة",
      "s": "12:30",
      "e": "14:10",
-     "who": "م.م. هند ماهر / م.م. غادة عبدالله",
-     "room": "قاعة 6020"
+     "who": "د. هيثم رزق",
+     "room": "قاعة R-9001 (مع CS / AI)"
     },
     {
      "t": "Operating Systems",
      "k": "سكشن",
      "s": "14:15",
      "e": "15:55",
-     "who": "م.م. هاجر محمد / م. محمد عبدالمنعم",
-     "room": "قاعة 6106"
+     "who": "م.م. محمود سامي / م. احمد علي",
+     "room": "قاعة 6108 (مع NT C09)"
     }
    ]
   },
   {
    "id": "fri",
    "name": "الجمعة",
-   "tag": "جمعة مباركة",
+   "tag": "جمعة مباركة + كورس ألماني",
    "kind": "off",
-   "offMsg": "جمعة مباركة! لا يوجد محاضرات اليوم.",
+   "offMsg": "جمعة مباركة! مفيش جامعة النهارده — بس متنساش كورس الألماني 3:30.",
    "routine": [
     {
-     "s": "06:00",
-     "e": "06:15",
+     "s": "05:45",
+     "e": "06:00",
      "t": "استيقاظ + ورد قرآن ١٥ دقيقة",
      "c": "quran"
     },
     {
+     "s": "06:00",
+     "e": "06:15",
+     "t": "Pre-workout",
+     "c": "meal"
+    },
+    {
      "s": "06:15",
-     "e": "08:15",
-     "t": "فطار + مذاكرة الجامعة",
-     "c": "study"
+     "e": "08:45",
+     "t": "تمرين الجيم (Push Day)",
+     "c": "gym"
     },
     {
-     "s": "08:15",
-     "e": "10:30",
-     "t": "كورس الويب",
-     "c": "web"
+     "s": "08:45",
+     "e": "09:00",
+     "t": "Post-workout",
+     "c": "meal"
     },
     {
-     "s": "10:30",
+     "s": "09:00",
+     "e": "09:30",
+     "t": "Breakfast + شاور",
+     "c": "meal"
+    },
+    {
+     "s": "09:30",
      "e": "11:30",
-     "t": "قراءة وإنجليزي",
-     "c": "read"
+     "t": "مذاكرة: Probability & Statistics (محاضرة التلات + حل مسائل)",
+     "c": "study"
     },
     {
      "s": "11:30",
@@ -761,31 +1042,49 @@ window.PLAN = {
     },
     {
      "s": "13:30",
-     "e": "15:00",
-     "t": "غداء وتجمع عائلي وراحة",
-     "c": "meal"
+     "e": "14:00",
+     "t": "راحة",
+     "c": "rest"
     },
     {
-     "s": "15:00",
-     "e": "18:00",
-     "t": "تمرين الجيم (Push Day)",
-     "c": "gym"
+     "s": "14:00",
+     "e": "14:30",
+     "t": "لبس وتجهيز",
+     "c": "prep"
     },
     {
-     "s": "18:00",
-     "e": "20:30",
-     "t": "مذاكرة ألماني",
+     "s": "14:30",
+     "e": "15:30",
+     "t": "مواصلات لكورس الألماني (بودكاست ألماني)",
+     "c": "commute"
+    },
+    {
+     "s": "15:30",
+     "e": "18:30",
+     "t": "كورس الألماني",
      "c": "german"
     },
     {
+     "s": "18:30",
+     "e": "19:30",
+     "t": "رجوع (بودكاست إنجليزي)",
+     "c": "commute"
+    },
+    {
+     "s": "19:30",
+     "e": "20:30",
+     "t": "Dinner وتجمع عائلي",
+     "c": "meal"
+    },
+    {
      "s": "20:30",
-     "e": "22:00",
+     "e": "21:45",
      "t": "ويب (تطبيق مشاريع)",
      "c": "web"
     },
     {
-     "s": "22:00",
-     "e": "22:30",
+     "s": "21:45",
+     "e": "22:15",
      "t": "شطرنج",
      "c": "chess"
     }
@@ -797,61 +1096,97 @@ window.PLAN = {
    "name": "السبت",
    "tag": "يوم الإنجاز",
    "kind": "off",
-   "offMsg": "لا يوجد محاضرات اليوم — استغل الوقت في مراجعة ما فاتك من الأسبوع.",
+   "offMsg": "لا يوجد محاضرات اليوم — مذاكرة المواد التقيلة ومراجعة الأسبوع كله.",
    "routine": [
     {
-     "s": "06:00",
-     "e": "06:15",
+     "s": "05:45",
+     "e": "06:00",
      "t": "استيقاظ + ورد قرآن ١٥ دقيقة",
      "c": "quran"
     },
     {
-     "s": "06:15",
-     "e": "08:45",
-     "t": "فطار + مذاكرة الجامعة (لم المتراكم)",
-     "c": "study"
-    },
-    {
-     "s": "08:45",
-     "e": "11:00",
-     "t": "مذاكرة ألماني",
-     "c": "german"
-    },
-    {
-     "s": "11:00",
-     "e": "13:00",
-     "t": "كورس الويب",
-     "c": "web"
-    },
-    {
-     "s": "13:00",
-     "e": "15:00",
-     "t": "غداء وراحة",
+     "s": "06:00",
+     "e": "06:15",
+     "t": "Pre-workout",
      "c": "meal"
     },
     {
-     "s": "15:00",
-     "e": "18:00",
+     "s": "06:15",
+     "e": "08:45",
      "t": "تمرين الجيم (Pull Day)",
      "c": "gym"
     },
     {
-     "s": "18:00",
-     "e": "20:00",
-     "t": "قراءة كتب وإنجليزي",
+     "s": "08:45",
+     "e": "09:00",
+     "t": "Post-workout",
+     "c": "meal"
+    },
+    {
+     "s": "09:00",
+     "e": "09:30",
+     "t": "Breakfast + شاور",
+     "c": "meal"
+    },
+    {
+     "s": "09:30",
+     "e": "11:30",
+     "t": "مذاكرة: System Analysis & Design",
+     "c": "study"
+    },
+    {
+     "s": "11:30",
+     "e": "13:30",
+     "t": "مذاكرة: Information Systems",
+     "c": "study"
+    },
+    {
+     "s": "13:30",
+     "e": "14:30",
+     "t": "راحة",
+     "c": "rest"
+    },
+    {
+     "s": "14:30",
+     "e": "16:30",
+     "t": "مذاكرة: Operating Systems",
+     "c": "study"
+    },
+    {
+     "s": "16:30",
+     "e": "17:30",
+     "t": "قراءة وممارسة إنجليزي (الساعة الأسبوعية)",
      "c": "read"
     },
     {
-     "s": "20:00",
-     "e": "22:00",
+     "s": "17:30",
+     "e": "19:00",
      "t": "ويب (تطبيق عملي)",
      "c": "web"
     },
     {
+     "s": "19:00",
+     "e": "19:30",
+     "t": "Dinner",
+     "c": "meal"
+    },
+    {
+     "s": "19:30",
+     "e": "21:00",
+     "t": "مذاكرة ألماني (مراجعة كورس الجمعة)",
+     "c": "german"
+    },
+    {
+     "s": "21:00",
+     "e": "22:00",
+     "t": "مذاكرة: مراجعة الأسبوع (كل المواد)",
+     "c": "study"
+    },
+    {
      "s": "22:00",
-     "e": "22:30",
-     "t": "شطرنج",
-     "c": "chess"
+     "e": "22:15",
+     "t": "روتين مسائي وتجهيز للنوم",
+     "c": "evening"
     }
    ],
    "lectures": []
@@ -873,16 +1208,17 @@ window.CATS = {
   prep:    { n: 'فطار وتجهيز',     i: '☕', h: 35  },
   commute: { n: 'مواصلات',         i: '🚌', h: 15  },
   uni:     { n: 'الجامعة',         i: '🏛️', h: 240 },
-  prayer:  { n: 'صلاة الجمعة',     i: '🕌', h: 145 }
+  prayer:  { n: 'صلاة الجمعة',     i: '🕌', h: 145 },
+  rest:    { n: 'راحة',            i: '😌', h: 120 }
 };
 
 /* قواعد ذهبية (بتظهر في صفحة "المزيد") */
 window.RULES = [
-  ['😴', 'النوم أولاً', 'نوم ثابت 10:30 م وصحيان 6:00 ص = 7.5 ساعة نوم. النوم مش وقت ضايع، ده اللي بيشغّل باقي اليوم.'],
-  ['🏋️', 'الجيم بعد الجامعة', 'التمرين دايماً لما ترجع من الجامعة وقبل المذاكرة — بيعمل Reset لمخك وجسمك.'],
+  ['😴', 'النوم أولاً', 'نوم ثابت 10:15 م وصحيان 5:45 ص = 7.5 ساعة نوم. النوم مش وقت ضايع، ده اللي بيشغّل باقي اليوم.'],
+  ['🏋️', 'الجيم الصبح بدري', 'التمرين كل يوم أول حاجة بعد الورد (6:15 – 8:45) — بيصحّي جسمك ومخك لباقي اليوم. التلات بس بالليل بعد كورس الألماني (7:30 – 10:00).'],
   ['📖', 'القرآن ١٥ دقيقة ثابتة', 'ورد خفيف كل صباح بدل الحفظ المكثف مؤقتاً — الاستمرار أهم من الكمية.'],
   ['🚌', 'استغلال المواصلات', 'الساعتين دول كنز: بودكاست إنجليزي/ألماني أو قراءة أو شطرنج من غير ما تاخد وقت من البيت.'],
-  ['🔀', 'كسر الروتين', 'كل يوم مترتب بشكل مختلف عشان تتجنب الملل: الإثنين ويب مكثف، الأربعاء لغات، الخميس استغلال الصباح.']
+  ['📚', 'المذاكرة أولاً', 'كل مادة بتتذاكر يوم ما بتاخدها، والحد تحضير لمواد الاتنين، والسبت مراجعة الأسبوع. 24 ساعة مذاكرة جامعة + 11 ساعة ألماني (منهم 6 كورس) + 7 ساعات ويب في الأسبوع.'],
 ];
 
 </script>
@@ -1049,7 +1385,7 @@ function renderToday() {
   for (let i = 0; i < 7; i++) {
     const d = addDays(ws, i), dk = dkey(d), s = dayStats(d);
     const dot = dk > tk ? '' : s.p >= PASS ? 'g' : s.done ? 'p' : '';
-    strip += `<button class="dchip ${dk === k ? 'on' : ''} ${dk === tk ? 'today' : ''}" data-act="day" data-day="${dk}" aria-label="${PLAN.days[i].name}">
+    strip += `<button class="dchip ${dk === k ? 'on' : ''} ${dk === tk ? 'today' : ''}" data-act="day" data-day="${dk}" style="--i:${i}" aria-label="${PLAN.days[i].name}">
       <b>${PLAN.days[i].name}</b><span>${d.getDate()}</span><i class="${dot}"></i></button>`;
   }
 
@@ -1081,10 +1417,10 @@ function renderToday() {
   if (dp.lectures.length) {
     const m = nowMin();
     lect = `<div class="card"><h2>🏛️ جدول الجامعة <small>${dp.lectures.length} محاضرات</small></h2>` +
-      dp.lectures.map(l => {
+      dp.lectures.map((l, li) => {
         const live = isToday && mins(l.s) <= m && m < mins(l.e);
         const bcls = l.k === 'سكشن' ? 'sec2' : l.k === 'إعادة' ? 're' : '';
-        return `<div class="lect ${live ? 'now' : ''}">
+        return `<div class="lect ${live ? 'now' : ''}" style="--i:${li}">
           <div class="tm">${fmt(l.s)}<small>${fmt(l.e)}</small></div>
           <div><h3>${esc(l.t)}<span class="badge ${bcls}">${esc(l.k)}</span></h3>
           <p>👤 ${esc(l.who)} · 📍 ${esc(l.room)}</p></div></div>`;
@@ -1096,10 +1432,10 @@ function renderToday() {
 
   /* routine */
   const m = nowMin();
-  const tasks = dp.routine.map(it => {
+  const tasks = dp.routine.map((it, ti) => {
     const c = CATS[it.c], key = itemKey(it), done = !!dn[key];
     const live = isToday && mins(it.s) <= m && m < mins(it.e);
-    return `<li class="task ${done ? 'done' : ''} ${live ? 'now' : ''}" data-act="toggle" data-key="${esc(key)}" role="checkbox" aria-checked="${done}">
+    return `<li class="task ${done ? 'done' : ''} ${live ? 'now' : ''}" data-act="toggle" data-key="${esc(key)}" role="checkbox" aria-checked="${done}" style="--i:${ti}">
       <span class="chk">✓</span><span class="ico" style="--h:${c.h}">${c.i}</span>
       <div class="tx"><b><bdi>${esc(it.t)}</bdi></b><small>${fmt(it.s)} – ${fmt(it.e)} · ${dur(mins(it.e) - mins(it.s))}</small></div>
       ${live ? '<span class="live">دلوقتي</span>' : ''}</li>`;
@@ -1122,6 +1458,7 @@ function renderToday() {
   $('#hello').textContent = greeting();
   $('#subdate').textContent = `${longDate(date)} · ${PLAN.term}`;
   $('#streakPill').textContent = `🔥 ${sk.cur}`;
+  animateRing();
   const on = $('#strip .on'); if (on && !renderToday.scrolled) { on.scrollIntoView({ inline: 'center', block: 'nearest' }); renderToday.scrolled = true; }
 }
 
@@ -1134,7 +1471,9 @@ function toggle(key) {
   save();
   const was = navigator.vibrate ? navigator.vibrate(8) : 0;
   renderToday();
-  if (dayStats(parseKey(k)).p === 1) toast('🎉 خلّصت كل مهام اليوم! ما شاء الله');
+  const row = document.querySelector(`.task[data-key="${CSS.escape(key)}"]`);
+  if (row) row.classList.add(S.done[k] && S.done[k][key] ? 'pop' : 'unpop');
+  if (dayStats(parseKey(k)).p === 1) { toast('🎉 خلّصت كل مهام اليوم! ما شاء الله'); confetti(); }
 }
 
 /* ============================================================
@@ -1329,16 +1668,54 @@ function render() {
   $$('.tabbar button').forEach(b => b.classList.toggle('on', b.dataset.tab === ui.tab));
   if (ui.tab !== 'today') { $('#streakPill').textContent = `🔥 ${streaks().cur}`; $('#subdate').textContent = `${longDate(new Date())} · ${PLAN.term}`; $('#hello').textContent = greeting(); }
 }
-function go(tab) { ui.tab = tab; render(); window.scrollTo({ top: 0 }); }
+function go(tab) { ui.tab = tab; ui.anim = true; render(); animateIn($('#v-' + tab)); window.scrollTo({ top: 0 }); }
+
+/* ---------- motion helpers ---------- */
+const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+function animateIn(v) {
+  ui.anim = false;
+  if (!v || reducedMotion()) return;
+  v.classList.remove('enter'); void v.offsetWidth; v.classList.add('enter');
+  clearTimeout(v._t); v._t = setTimeout(() => v.classList.remove('enter'), 1800);
+}
+function animateRing() {
+  const rf = $('#v-today .rf'), tx = $('#v-today .rtx'); if (!rf || !tx) return;
+  const full = parseFloat(rf.getAttribute('stroke-dasharray')), to = parseFloat(rf.getAttribute('stroke-dashoffset'));
+  const last = animateRing.last; let from = null;
+  if (ui.anim) from = full;
+  else if (last && last.k === ui.day && last.off !== to) from = last.off;
+  animateRing.last = { k: ui.day, off: to };
+  if (from == null || reducedMotion()) return;
+  rf.style.transition = 'none'; rf.style.strokeDashoffset = from + 'px'; rf.getBoundingClientRect();
+  rf.style.transition = ''; rf.style.strokeDashoffset = to + 'px';
+  const final = tx.textContent, fp = (1 - from / full) * 100, tp = (1 - to / full) * 100, t0 = performance.now(), D = 900;
+  const step = t => {
+    const q = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - q, 3);
+    tx.textContent = q < 1 ? Math.round(fp + (tp - fp) * e) + '%' : final;
+    if (q < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+function confetti() {
+  if (reducedMotion()) return;
+  const box = document.createElement('div'); box.className = 'confetti';
+  const cols = ['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
+  for (let i = 0; i < 70; i++) {
+    const p = document.createElement('i');
+    p.style.cssText = `left:${Math.random() * 100}%;background:${cols[i % cols.length]};--dx:${((Math.random() - .5) * 180).toFixed(0)}px;--r:${(Math.random() * 900 - 450).toFixed(0)}deg;animation-delay:${(Math.random() * .35).toFixed(2)}s;animation-duration:${(1.5 + Math.random() * 1.3).toFixed(2)}s`;
+    box.appendChild(p);
+  }
+  document.body.appendChild(box); setTimeout(() => box.remove(), 3500);
+}
 
 document.addEventListener('click', async e => {
   const el = e.target.closest('[data-act]'); if (!el) return;
   const a = el.dataset.act;
   switch (a) {
     case 'tab': go(el.dataset.tab); break;
-    case 'day': ui.day = el.dataset.day; renderToday.scrolled = false; renderToday(); break;
+    case 'day': ui.day = el.dataset.day; renderToday.scrolled = false; ui.anim = true; renderToday(); animateIn($('#v-today')); break;
     case 'toggle': toggle(el.dataset.key); break;
-    case 'range': ui.range = +el.dataset.n; renderStats(); break;
+    case 'range': ui.range = +el.dataset.n; renderStats(); animateIn($('#v-stats')); break;
     case 'theme': S.settings.theme = el.dataset.v; save(); applyTheme(); renderMore(); break;
     case 'sub': {
       if (!/^https?:$/.test(location.protocol) || /^(localhost|127\.)/.test(location.hostname)) return toast('الاشتراك بيشتغل بس على الرابط المنشور (GitHub Pages)');
@@ -1391,7 +1768,9 @@ if ('serviceWorker' in navigator) {
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 
 applyTheme();
+ui.anim = true;
 render();
+animateIn($('#v-' + ui.tab));
 window.__app = { get S() { return S; }, ui, dayStats, streaks, buildICS };   // للاختبار
 })();
 
