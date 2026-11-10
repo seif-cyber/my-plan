@@ -1656,7 +1656,7 @@ function renderMore() {
 
 /* ---------- ICS (تقويم) ---------- */
 function icsEscape(s) { return String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n'); }
-function fold(line) { let out = '', i = 0; while (line.length - i > 60) { out += line.slice(i, i + 60) + '\r\n '; i += 60; } return out + line.slice(i); }
+function fold(line) { const enc = new TextEncoder(), out = []; let cur = '', b = 0; for (const ch of line) { const n = enc.encode(ch).length; if (b + n > (out.length ? 74 : 75)) { out.push(cur); cur = ''; b = 0; } cur += ch; b += n; } out.push(cur); return out.join('\r\n '); }
 function nextDate(idx) { const t = new Date(); let d = new Date(t.getFullYear(), t.getMonth(), t.getDate()); while (d.getDay() !== idx) d = addDays(d, 1); return d; }
 function buildICS(mode) {
   const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Khotty//AR//', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:خطتي'];

@@ -1,5 +1,5 @@
 /* sw.js (اختياري) — ارفعه جنب index.html عشان التطبيق يشتغل أوفلاين */
-const CACHE='khotty-single-v13';
+const CACHE='khotty-single-v14';
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./','index.html']))));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE).map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
 self.addEventListener('message',e=>{if(e.data&&e.data.type==='SKIP_WAITING')self.skipWaiting()});
